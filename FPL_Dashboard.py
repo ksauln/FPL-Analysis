@@ -24,6 +24,12 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 import pandas as pd
+import dash_auth
+
+
+#auth for dashboard
+#auth = dash_auth.BasicAuth(app)
+
 
 app = dash.Dash()
 
@@ -73,7 +79,7 @@ app.layout = html.Div([
                 dcc.Graph(id="other_stats")
                 ],
                 className="row",
-                style={"padding": 20}),
+                style={"width": '40%'}),
 
 
 # Insert table for next 5 fixtures
@@ -81,15 +87,17 @@ app.layout = html.Div([
                 dcc.Graph(id="next_fixtures_p1")
                 ],
                 className="row",
-                style={"padding": 20,'width': '48%', 'display': 'inline-block'}),
+                style={'width': '40%', 'display': 'inline-block'}),
         html.Div([
                 dcc.Graph(id="next_fixtures_p2")
                 ],
                 className="row",
-                style={"padding": 20,'width': '48%', 'display': 'inline-block'}),
+                style={'width': '40%', 'display': 'inline-block'})
 
 
     ])
+
+
 
 
 # Call back for total points Bar Graph
@@ -203,9 +211,9 @@ def update_graph(player1, player2):
     value_cell = [player_stats['Category'],player_stats[player1],player_stats[player2]]
 
     trace = go.Table(
-        header={"values": value_header, "fill": {"color": "#FFD957"}, "align": ['center'], "height": 35,
+        header={"values": value_header, "fill": {"color": "LightSkyBlue"}, "align": ['center'], "height": 35,
                 "line": {"width": 2, "color": "#685000"}, "font": {"size": 15}},
-        cells={"values": value_cell, "fill": {"color": "#FFE89A"}, "align": ['left', 'center'],
+        cells={"values": value_cell, "fill": {"color": "LightSkyBlue"}, "align": ['left', 'center'],
                "line": {"color": "#685000"}})
 
     layout = go.Layout(title=f"Player Stats", height=600)
@@ -243,9 +251,9 @@ def update_graph(player1):
                   p1_next5['opponent_team_diff'],p1_next5['was_home']]
 
     trace = go.Table(
-        header={"values": value_header, "fill": {"color": "#FFD957"}, "align": ['center'], "height": 35,
+        header={"values": value_header, "fill": {"color": "LightSkyBlue"}, "align": ['center'], "height": 35,
                 "line": {"width": 2, "color": "#685000"}, "font": {"size": 15}},
-        cells={"values": value_cell, "fill": {"color": "#FFE89A"}, "align": ['left', 'center'],
+        cells={"values": value_cell, "fill": {"color": "LightSkyBlue"}, "align": ['left', 'center'],
                "line": {"color": "#685000"}})
 
     layout = go.Layout(title=player1 + " Upcoming Fixtures", height=600)
@@ -282,9 +290,9 @@ def update_graph(player2):
                   p2_next5['opponent_team_diff'],p2_next5['was_home']]
 
     trace = go.Table(
-        header={"values": value_header, "fill": {"color": "#FFD957"}, "align": ['center'], "height": 35,
+        header={"values": value_header, "fill": {"color": "LightSkyBlue"}, "align": ['center'], "height": 35,
                 "line": {"width": 2, "color": "#685000"}, "font": {"size": 15}},
-        cells={"values": value_cell, "fill": {"color": "#FFE89A"}, "align": ['left', 'center'],
+        cells={"values": value_cell, "fill": {"color": "LightSkyBlue"}, "align": ['left', 'center'],
                "line": {"color": "#685000"}})
 
     layout = go.Layout(title=player2 + " Upcoming Fixtures", height=600)
