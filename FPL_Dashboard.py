@@ -1,22 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Fri Nov 22 14:17:37 2019
-
-@author: Sauln
-"""
-
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Nov 18 20:03:48 2019
-
-@author: Sauln
-"""
-
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
 Created on Fri Nov 15 10:56:51 2019
 
 @author: Sauln
@@ -40,8 +24,15 @@ import dash_auth
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-
+app = dash.Dash(__name__, 
+                external_stylesheets=external_stylesheets,
+                meta_tags=[
+                            {
+                                "name": "fplanalysis",
+                                "content": "width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no",
+                            }
+                        ]
+                )
 
 # Selectable options for graphs
 available_players = totals_curr['player'].unique()
