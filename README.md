@@ -6,7 +6,7 @@ Currently in progress but this is what I have so far. My idea was to create a da
 "FPL_Dashboard.py" calls and uses tables from "FPL_Analysis.py" and that calls functions from "build_out.py"
 So if you would like to run the entire dashboard all in one go, run "FPL_Dashboard.py".
 
-Things I still need to do:
+Things I still need to do: 
 - Format everything correctly
 - Add in a few more key statistics
 - Create a prediction model to predict a players points for the next game week
