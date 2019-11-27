@@ -8,7 +8,6 @@ So if you would like to run the entire dashboard all in one go, run "FPL_Dashboa
 
 Things I still need to do:
 - Format everything correctly
-- Make the graphs selectable, so you can select the metric to compare
 - Add in a few more key statistics
 - Create a prediction model to predict a players points for the next game week
 
@@ -27,7 +26,7 @@ Required packages:
 - dash_html_components
 - dash.dependencies
 - plotly.graph_objs
-- pandas 
+- pandas
 - pathlib
 - os
 - numpy
