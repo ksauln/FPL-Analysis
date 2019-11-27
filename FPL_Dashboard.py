@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+Created on Fri Nov 22 14:17:37 2019
+
+@author: Sauln
+"""
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
 Created on Mon Nov 18 20:03:48 2019
 
 @author: Sauln
@@ -30,140 +38,276 @@ import dash_auth
 #auth for dashboard
 #auth = dash_auth.BasicAuth(app)
 
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app = dash.Dash()
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
+
+# Selectable options for graphs
 available_players = totals_curr['player'].unique()
-
-app.layout = html.Div([
-
-   # Div for Player selection, labeled as player1 and player2
-        html.Div([
-            dcc.Dropdown(
-                id='player1',
-                options=[{'label': i, 'value': i } for i in available_players],
-                value='Jamie_Vardy'
-                        ),
-                    ],
-                    style={'width': '48%', 'display': 'inline-block'}),
-        html.Div([
-            dcc.Dropdown(
-                id='player2',
-                options=[{'label': i, 'value': i} for i in available_players],
-                value='James_Maddison'
-                        )
-                ],
-                style={'width': '48%', 'display': 'inline-block'}),
-
-# Divs for Total Points Bar Graph
-         html.Div([
-                dcc.Graph(id='player_tot_pts')
-                ],
-                style={'width': '48%', 'display': 'inline-block'}),
-
-#Div for Average Points Bar Graph
-          html.Div([
-                dcc.Graph(id='player_avg_pts')
-                ],
-                style={'width': '48%', 'display': 'inline-block'}),
+available_metric1 = list(['minutes','total_points','assists','bonus','bps','goals_conceded',
+                          'goals_scored','own_goals','penalties_missed',
+                          'penalities_saved','red_cards','saves','yellow_cards'])
+available_metric2 = list(['minutes','total_points','assists','bonus','bps','goals_conceded',
+                          'goals_scored','own_goals','penalties_missed',
+                          'penalities_saved','red_cards','saves','yellow_cards'])
+available_trend_metric = list(['minutes','total_points','assists','bonus','bps','goals_conceded',
+                          'goals_scored','own_goals','penalties_missed',
+                          'penalities_saved','red_cards','saves','yellow_cards','clean_sheets',
+                          'selected'])
 
 
-  # scatterplot of current points
-        html.Div([
-                dcc.Graph(id='points_over_season')
-                ],
+###############################################################
+# Create Sections
+def build_player_selection():
+    return html.Div(
+            id="upper-left",
+            className="player selection",
+            children=[
+                    html.P(
+                            className="section-title",
+                            children="Choose the players you want to compare",
+                            ),
+                html.Div(
+                className="control-row-1",
+                children=[
+                    html.Div(
+                        id="select-player1",
+                        children=[
+                            html.Label("Select first player"),
+                            dcc.Dropdown(
+                                id="player1",
+                                options=[{"label": i, "value": i} for i in available_players],
+                                value=available_players[1],
+                            ),
+                        ],style={'width':'70%'}
                     ),
+                    html.Div(
+                        id="select-player2",
+                        children=[
+                            html.Label("Select second player"),
+                            dcc.Dropdown(
+                                id="player2",
+                                options=[{"label": i, "value": i} for i in available_players],
+                                value=available_players[2],
+                                        ),
+                                    ],style={'width':'70%'}
+                                ),
+                            ],
+                        ),
+                    ],  
+                )
 
-# Insert Table for statistics
-        html.Div([
-                dcc.Graph(id="other_stats")
-                ],
-                className="row",
-                style={"width": '40%'}),
+def build_bar_graphs():
+    return html.Div(
+            id="upper-right",
+            className="bar graphs",
+            children=[
+                    html.P(
+                            className="section-title",
+                            children="Graph Comparsion",
+                            ),
+                html.Div(
+                className="totals",
+                children=[
+                    html.Div(
+                        id="select-metric1",
+                        children=[
+                            html.Label("Select totals metric to compare"),
+                            dcc.Dropdown(
+                                id="metric1",
+                                options=[{"label": i, "value": i} for i in available_metric1],
+                                value=available_metric1[1],
+                                        ),
+                            dcc.Graph(id='player_tot_graph'),
+                                    ],
+                                ),
+                           ],
+                          ),
+                 html.Div(
+                className="averages",
+                children=[
+                    html.Div(
+                        id="select-metric2",
+                        children=[
+                            html.Label("Select averages metric to compare"),
+                            dcc.Dropdown(
+                                id="metric2",
+                                options=[{"label": i, "value": i} for i in available_metric2],
+                                value=available_metric2[1],
+                                        ),
+                            dcc.Graph(id='player_avg_graph'),
+                                    ],
+                                ),
+                           ],
+                          ),
+                    ],
+                )
 
 
-# Insert table for next 5 fixtures
-        html.Div([
-                dcc.Graph(id="next_fixtures_p1")
-                ],
-                className="row",
-                style={'width': '40%', 'display': 'inline-block'}),
-        html.Div([
-                dcc.Graph(id="next_fixtures_p2")
-                ],
-                className="row",
-                style={'width': '40%', 'display': 'inline-block'})
+def build_trend_graphs():
+    return html.Div(
+            id="middle",
+            className="trend graphs",
+            children=[
+                    html.P(
+                            className="section-title",
+                            children="Trending",
+                            ),
+                html.Div(
+                className="trend",
+                children=[
+                    html.Div(
+                        id="select-trend",
+                        children=[
+                            html.Label("Select metric to look at"),
+                            dcc.Dropdown(
+                                id="trend_metric",
+                                options=[{"label": i, "value": i} for i in available_trend_metric],
+                                value=available_metric1[1],
+                                        ),
+                            dcc.Graph(id='trend_graph'),
+                                    ],
+                                ),
+                           ],
+                          ),
+                    ],
+                )
+
+def build_upcoming_fixtures():
+    return html.Div(
+            id="bottom",
+            className="upcoming",
+            children=[
+                    html.P(
+                            className="section-title",
+                            children="Upcoming Fixtures",
+                            ),
+                html.Div(
+                className="upcoming_fixtures",
+                children=[
+                        html.Div([
+                                    dcc.Graph(id="next_fixtures_p1")
+                                ],
+                                className="row",
+                                    style={'width': '50%', 'display': 'inline-block'}),
+                        html.Div([
+                                    dcc.Graph(id="next_fixtures_p2")
+                                ],
+                                className="row",
+                                    style={'width': '50%', 'display': 'inline-block'})
+                                ],
+                            ),
+                    ],
+                )
 
 
-    ])
 
+app.layout = html.Div(
+    className="container scalable",
+    children=[
+        html.Div(
+            id="banner",
+            className="banner",
+            children=[
+                html.H6("FPL Analytics"),
+            ],
+        ),
+        html.Div(
+            id="left-container",
+            className="row",
+            children=[
+                build_player_selection()
+                    ],style={'width':'40%','display':'inline-block'}
+                ),
+        html.Div(
+                id="right-container",
+                children=[
+                        build_bar_graphs()
+                        ],style={'width':'60%','display':'inline-block'}
+                    ),
+         html.Div(
+                id="middle-container",
+                children=[
+                        build_trend_graphs()
+                        ],
+                    ),
+         html.Div(
+                 id="bottom-container",
+                 children =[
+                         build_upcoming_fixtures()
+                         ],
+                 ),
+        ],
+    )
+      
 
-
-
-# Call back for total points Bar Graph
+###############################################################
+# Call back for TOTALS Bar Graph
 @app.callback(
-    Output('player_tot_pts', 'figure'),
+    Output('player_tot_graph', 'figure'),
     [Input('player1', 'value'),
-     Input('player2', 'value')])
+     Input('player2', 'value'),
+     Input('metric1','value')])
 
 
-def update_player_tot_pts(player1,player2):
+def update_player_tot_graph(player1,player2, metric1):
     trace1 = go.Bar(x= totals_curr[totals_curr['player'] == player1]['player'],
-                    y= totals_curr[totals_curr['player'] == player1]['total_points'],
+                    y= totals_curr[totals_curr['player'] == player1][metric1],
                     name =player1)
     trace2 = go.Bar(x= totals_curr[totals_curr['player'] == player2]['player'],
-                    y= totals_curr[totals_curr['player'] == player2]['total_points'],
+                    y= totals_curr[totals_curr['player'] == player2][metric1],
                     name =player2)
 
     return {
         'data': [trace1,trace2],
 
         'layout': go.Layout(
-                title= " Total Points",
+                title= metric1,
                 barmode="group"
         )
     }
-
-# Call back for total points Bar Graph
+###############################################################
+# Call back for AVG Bar Graph
 @app.callback(
-    Output('player_avg_pts', 'figure'),
+    Output('player_avg_graph', 'figure'),
     [Input('player1', 'value'),
-     Input('player2', 'value')])
+     Input('player2', 'value'),
+     Input('metric2','value')])
 
 
-def update_player_avg_pts(player1,player2):
+def update_player_avg_graph(player1,player2, metric2):
     trace1 = go.Bar(x= means_curr[means_curr['player'] == player1]['player'],
-                    y= means_curr[means_curr['player'] == player1]['total_points'],
+                    y= means_curr[means_curr['player'] == player1][metric2],
                     name =player1)
     trace2 = go.Bar(x= means_curr[means_curr['player'] == player2]['player'],
-                    y= means_curr[means_curr['player'] == player2]['total_points'],
+                    y= means_curr[means_curr['player'] == player2][metric2],
                     name =player2)
 
     return {
         'data': [trace1,trace2],
 
         'layout': go.Layout(
-                title= "Avg Points Per Game",
+                title= "Average " + metric2 + " Per Game",
                 barmode="group"
         )
     }
-
-
-# Call back for points over season
-
+###############################################################
+# Call back for Trend Graph
 @app.callback(
-    Output('points_over_season', 'figure'),
+    Output('trend_graph', 'figure'),
     [Input('player1', 'value'),
-     Input('player2', 'value')])
+     Input('player2', 'value'),
+     Input('trend_metric','value')])
 
-def update_points_over_season(player1,player2):
+def update_trend_graph(player1,player2, trend_metric):
     trace1 = go.Scatter(x= df_1920[df_1920['player'] == player1]['gw'],
-                    y= df_1920[df_1920['player'] == player1]['total_points'],
+                    y= df_1920[df_1920['player'] == player1][trend_metric],
                     name =player1,
                     mode='lines+markers')
 
     trace2 = go.Scatter(x= df_1920[df_1920['player'] == player2]['gw'],
-                y= df_1920[df_1920['player'] == player2]['total_points'],
+                y= df_1920[df_1920['player'] == player2][trend_metric],
                 name =player2,
                 mode='lines+markers')
 
@@ -171,59 +315,12 @@ def update_points_over_season(player1,player2):
         'data': [trace1, trace2],
 
         'layout': go.Layout(
-                title="Game Week Points",
-                yaxis={"title":"Points"},
+                title=trend_metric + " Over Season",
+                yaxis={"title":trend_metric},
                 xaxis={"title":"Game Week"}
         )
     }
-
-
-
-# Call back for stats table
-@app.callback(
-    Output("other_stats", "figure"),
-     [Input('player1', 'value'),
-     Input('player2', 'value')])
-
-
-def update_graph(player1, player2):
-    value_header = ['Category',player1, player2]
-
-    #create dataframe with the stats we want to look at
-    #Player1 info
-    p1_df = pd.DataFrame([['Goals Scored',totals_curr.loc[(totals_curr['player']==player1),'goals_scored'].values[0]],
-                          ['Total Points',totals_curr.loc[(totals_curr['player']==player1),'total_points'].values[0]],
-                          ['Total Assists',totals_curr.loc[(totals_curr['player']==player1),'assists'].values[0]]
-                         ],
-            columns=['Category',player1])
-
-    #Player2 Info
-    p2_df = pd.DataFrame([['Goals Scored',totals_curr.loc[(totals_curr['player']==player2),'goals_scored'].values[0]],
-                      ['Total Points',totals_curr.loc[(totals_curr['player']==player2),'total_points'].values[0]],
-                      ['Total Assists',totals_curr.loc[(totals_curr['player']==player2),'assists'].values[0]]
-                     ],
-        columns=['Category',player2])
-
-    #Combine to create table
-    player_stats = p1_df.merge(p2_df, left_on='Category', right_on='Category', how='left')
-
-    #create value_Cell
-    value_cell = [player_stats['Category'],player_stats[player1],player_stats[player2]]
-
-    trace = go.Table(
-        header={"values": value_header, "fill": {"color": "LightSkyBlue"}, "align": ['center'], "height": 35,
-                "line": {"width": 2, "color": "#685000"}, "font": {"size": 15}},
-        cells={"values": value_cell, "fill": {"color": "LightSkyBlue"}, "align": ['left', 'center'],
-               "line": {"color": "#685000"}})
-
-    layout = go.Layout(title=f"Player Stats", height=600)
-
-
-    return {
-            "data": [trace],
-            "layout": layout
-            }
-
+###############################################################
 # Call back for next 5 fixtures
 @app.callback(
     Output("next_fixtures_p1", "figure"),
@@ -302,7 +399,6 @@ def update_graph(player2):
             "data": [trace],
             "layout": layout
             }
-
-
+###############################################################
 if __name__ == '__main__':
     app.run_server()
