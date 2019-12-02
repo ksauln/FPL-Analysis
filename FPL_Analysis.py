@@ -21,12 +21,12 @@ Make sure to get most recent data from here:
     
      
 '''
-current_gw = 12
+current_gw = 13
 current_season =1920
 
 #set working directory
-import os
-os.chdir("/Users/Sauln/Documents/Coding/Python/FPL/NEW")
+#import os
+#os.chdir("/Users/Sauln/Documents/Coding/Python/FPL/NEW")
 
 # First Import data
 # required libriaries

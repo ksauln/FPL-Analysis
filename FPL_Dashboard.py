@@ -34,6 +34,8 @@ app = dash.Dash(__name__,
                         ]
                 )
 
+server=app.server
+
 # Selectable options for graphs
 available_players = totals_curr['player'].unique()
 available_metric1 = list(['minutes','total_points','assists','bonus','bps','goals_conceded',
