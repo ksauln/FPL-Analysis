@@ -19,8 +19,12 @@ import pandas as pd
 import dash_auth
 
 
-#auth for dashboard
-#auth = dash_auth.BasicAuth(app)
+#creating username and password set to log into app
+
+USERNAME_PASSWORD_PAIRS =[['user','view2019']]
+
+
+
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -34,7 +38,10 @@ app = dash.Dash(__name__,
                         ]
                 )
 
-server=app.server
+#enable authorization
+
+auth = dash_auth.BasicAuth(app,USERNAME_PASSWORD_PAIRS)
+#server=app.server
 
 # Selectable options for graphs
 available_players = totals_curr['player'].unique()
