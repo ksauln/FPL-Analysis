@@ -1,3 +1,3 @@
+build: python built_out.py
+analysis: python FPL_Analyis.py
 web: gunicorn FPL_Dashboard:server
-worker: python ./built_out.py
-worker: python ./FPL_Analyis.py
