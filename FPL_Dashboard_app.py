@@ -355,7 +355,7 @@ means_curr = df_1920.groupby(['player']).mean().reset_index()
 
 
 # get next 5 fixtures
-next_5 = next_n_fixtures (fixtures, next_n_games=5, current_gw=12)
+next_5 = next_n_fixtures (fixtures, next_n_games=5, current_gw=current_gw)
 
 
 ##########################################################################################
