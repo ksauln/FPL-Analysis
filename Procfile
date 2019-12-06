@@ -1,1 +1,1 @@
-web: gunicorn FPL_Dashboard_app:server
+web: gunicorn FPL_Dashboard:server
