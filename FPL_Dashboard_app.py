@@ -5,9 +5,13 @@ Created on Fri Nov 15 10:56:51 2019
 
 @author: Sauln
 """
-# First build functions
+##########################################################################################
+##########################################################################################
+#                               First build functions                                    #
+##########################################################################################
+##########################################################################################
 
-# helpers.py
+
 import pandas as pd
 import numpy as np
 import requests
@@ -19,7 +23,7 @@ def build_players(path, season_paths, season_names, teams):
     season_players = []
 
     for season_path in season_paths:
-        players = pd.read_csv(season_path/'players_raw.csv',
+        players = pd.read_csv(season_path + '/players_raw.csv',
                                usecols=['first_name', 'second_name', 'id',
                                         'team_code', 'element_type', 'now_cost',
                                         'chance_of_playing_next_round'])
@@ -64,8 +68,8 @@ def build_season(path, season, all_players, teams, gw):
 
     # read in each gameweek and append to season list
     for i in gw:
-        gw = 'gws/gw' + str(i) + '.csv'
-        gw_df = pd.read_csv(path/gw, encoding='latin')
+        gw = '/gws/gw' + str(i) + '.csv'
+        gw_df = pd.read_csv(path + gw, encoding='latin1')
         gw_df['gw'] = i
         df_season.append(gw_df)
 
@@ -212,15 +216,15 @@ def remaining_season_func(all_players, current_season, fixtures, path):
     remaining_season_df['position'] = remaining_season_df['position'].astype(int)
 
     # save latest prediction set to csv
-    remaining_season_df.to_csv(path/'remaining_season.csv')
+    #remaining_season_df.to_csv(path + 'remaining_season.csv')
 
     return remaining_season_df
 
 #function to create the next 5 fixtures and their difficulty
-
+    
 def next_n_fixtures(fixtures, next_n_games, current_gw):
     # create schedule df
-
+    
     #get all home fixtures
     schedule1 = fixtures.copy()
     schedule1['was_home'] =True
@@ -232,7 +236,7 @@ def next_n_fixtures(fixtures, next_n_games, current_gw):
                               'away_team_code': 'opponent_team_code',
                               'away_team_diff':'opponent_team_diff'},
                               inplace=True)
-
+    
     #get awal fixtures
     schedule2 = fixtures.copy()
     schedule2['was_home'] =False
@@ -244,16 +248,16 @@ def next_n_fixtures(fixtures, next_n_games, current_gw):
                               'home_team_code': 'opponent_team_code',
                               'home_team_diff':'opponent_team_diff'},
                               inplace=True)
-
+    
     #combine home and away
     schedule_df = schedule1.append(schedule2).sort_values(by=['team_code','gw']).reset_index(drop=True)
     #rearrage columns
     schedule_df = schedule_df[['gw','team', 'team_code','team_diff',
                            'opponent_team','opponent_team_code','opponent_team_diff',
                            'was_home']]
-
+    
     dic = {}
-
+    
     for team_code in schedule_df['team_code'].unique():
         #schedule_sort=schedule_df.sort_values(by=[team_code,'gw'])
         team_looking_at = schedule_df.loc[schedule_df['team_code'] ==team_code]
@@ -262,37 +266,31 @@ def next_n_fixtures(fixtures, next_n_games, current_gw):
 
     return dic
 
-
-
-# Second Run analysis
+##########################################################################################
+##########################################################################################
+#                           Second Run analysis                                          #
+##########################################################################################
+##########################################################################################
+    
 current_gw = 13
 current_season =1920
 
-#set working directory
-#import os
-#os.chdir("/Users/Sauln/Documents/Coding/Python/FPL/NEW")
-
-# First Import data
-# required libriaries
-from pathlib import Path
-import pandas as pd
-
-# path to data directory
-path = Path('/Users/Sauln/Documents/Coding/Python/FPL/NEW/data')
+# path to data in github repo
+path = 'https://raw.githubusercontent.com/ksauln/FPL-Analysis/app/data/'
 
 # paths to each season's data
-season_paths = [path/'2016-17', path/'2017-18', path/'2018-19',path/'2019-20']
+season_paths = [path + '2016-17', path + '2017-18', path + '2018-19',path + '2019-20']
 
 # names for each season
 season_names = ['1617', '1718', '1819', '1920']
 
 # team codes
-teams = pd.read_csv(path/'teams.csv')
+teams = pd.read_csv(path + 'teams.csv')
 
 all_players = build_players(path, season_paths, season_names, teams)
 
 # create training sets for each season minus the teams values because for some reason
-# 2019-2020 isnt working add in ",teams_mv" to the end
+# 2019-2020 isnt working add in ",teams_mv" to the end 
 df_1617 = build_season(season_paths[0], season_names[0], all_players, teams, range(1, 39))
 df_1718 = build_season(season_paths[1], season_names[1], all_players, teams, range(1, 39))
 df_1819 = build_season(season_paths[2], season_names[2], all_players, teams, range(1, 39))
@@ -307,12 +305,12 @@ df_train = pd.concat([df_1617, df_1718, df_1819], ignore_index=True, axis=0)
 df_train.shape
 
 # save latest training set to csv
-df_train.to_csv(path/'initial_train.csv')
+#df_train.to_csv(path/'initial_train.csv')
 
 ## now need to create the prediction set
 # start by running fixtures from build_out
 
-fixtures = remaining_fixtures(path/'2019-20/fixtures.csv', current_gw, current_season, teams)
+fixtures = remaining_fixtures(path+ '2019-20/fixtures.csv', current_gw, current_season, teams)
 
 #now get the remaining season left for the players
 remaining_season = remaining_season_func(all_players, current_season, fixtures, path)
@@ -321,7 +319,7 @@ remaining_season = remaining_season_func(all_players, current_season, fixtures, 
 Create averages for the players up to the current game week
 '''
 #get list of current players
-players_current = all_players[all_players['team_'+ str(current_season)] > 0 ]
+players_current = all_players[all_players['team_'+ str(current_season)] > 0 ] 
 players_current = players_current[['full_name',
                                    'play_proba_'+str(current_season),
                                    'position_'+str(current_season),
@@ -337,9 +335,12 @@ means_curr = df_1920.groupby(['player']).mean().reset_index()
 next_5 = next_n_fixtures (fixtures, next_n_games=5, current_gw=12)
 
 
+##########################################################################################
+##########################################################################################
+#                           Last set up app                                              #
+##########################################################################################
+##########################################################################################
 
-
-# Last set up app
 
 
 # imports for plotly and dash
