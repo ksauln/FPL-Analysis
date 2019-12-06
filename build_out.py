@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np
 import requests
-import lxml.html as lh
+#import lxml.html as lh
 
 
 def build_players(path, season_paths, season_names, teams):
@@ -13,7 +13,8 @@ def build_players(path, season_paths, season_names, teams):
         players = pd.read_csv(season_path + '/players_raw.csv',
                                usecols=['first_name', 'second_name', 'id',
                                         'team_code', 'element_type', 'now_cost',
-                                        'chance_of_playing_next_round'])
+                                        'chance_of_playing_next_round'], encoding='latin1')
+        time.sleep(10)
         season_players.append(players)
 
     if len(season_players) > 1:
@@ -58,6 +59,7 @@ def build_season(path, season, all_players, teams, gw):
         gw = '/gws/gw' + str(i) + '.csv'
         gw_df = pd.read_csv(path + gw, encoding='latin1')
         gw_df['gw'] = i
+        time.sleep(10)
         df_season.append(gw_df)
 
     # concatenate entire season

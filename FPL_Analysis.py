@@ -34,7 +34,10 @@ from build_out import *
 import pandas as pd
 
 # path to data in github repo
-path = 'https://raw.githubusercontent.com/ksauln/FPL-Analysis/app/data/'
+#path = 'https://raw.githubusercontent.com/ksauln/FPL-Analysis/app/data/'
+
+#path to data in working dir
+path = 'data/'
 
 
 # paths to each season's data

@@ -15,7 +15,8 @@ Created on Fri Nov 15 10:56:51 2019
 import pandas as pd
 import numpy as np
 import requests
-import lxml.html as lh
+#import lxml.html as lh
+
 
 
 def build_players(path, season_paths, season_names, teams):
@@ -26,7 +27,7 @@ def build_players(path, season_paths, season_names, teams):
         players = pd.read_csv(season_path + '/players_raw.csv',
                                usecols=['first_name', 'second_name', 'id',
                                         'team_code', 'element_type', 'now_cost',
-                                        'chance_of_playing_next_round'])
+                                        'chance_of_playing_next_round'], encoding='latin1')
         season_players.append(players)
 
     if len(season_players) > 1:
@@ -276,7 +277,7 @@ current_gw = 13
 current_season =1920
 
 # path to data in github repo
-path = 'https://raw.githubusercontent.com/ksauln/FPL-Analysis/app/data/'
+path = 'data/'
 
 # paths to each season's data
 season_paths = [path + '2016-17', path + '2017-18', path + '2018-19',path + '2019-20']
