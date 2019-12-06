@@ -10,7 +10,7 @@ def build_players(path, season_paths, season_names, teams):
     season_players = []
 
     for season_path in season_paths:
-        players = pd.read_csv(season_path/'players_raw.csv',
+        players = pd.read_csv(season_path + '/players_raw.csv',
                                usecols=['first_name', 'second_name', 'id',
                                         'team_code', 'element_type', 'now_cost',
                                         'chance_of_playing_next_round'])
@@ -55,8 +55,8 @@ def build_season(path, season, all_players, teams, gw):
 
     # read in each gameweek and append to season list
     for i in gw:
-        gw = 'gws/gw' + str(i) + '.csv'
-        gw_df = pd.read_csv(path/gw, encoding='latin')
+        gw = '/gws/gw' + str(i) + '.csv'
+        gw_df = pd.read_csv(path + gw, encoding='latin1')
         gw_df['gw'] = i
         df_season.append(gw_df)
 
@@ -203,7 +203,7 @@ def remaining_season_func(all_players, current_season, fixtures, path):
     remaining_season_df['position'] = remaining_season_df['position'].astype(int)
 
     # save latest prediction set to csv
-    remaining_season_df.to_csv(path/'remaining_season.csv')
+    #remaining_season_df.to_csv(path + 'remaining_season.csv')
 
     return remaining_season_df
 

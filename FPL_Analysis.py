@@ -25,26 +25,26 @@ current_gw = 13
 current_season =1920
 
 #set working directory
-#import os
-#os.chdir("/Users/Sauln/Documents/Coding/Python/FPL/NEW")
+import os
+os.chdir("/Users/Sauln/Documents/Coding/Python/FPL/NEW")
 
 # First Import data
 # required libriaries
-from pathlib import Path
 from build_out import *
 import pandas as pd
 
-# path to data directory
-path = Path('/Users/Sauln/Documents/Coding/Python/FPL/NEW/data')
+# path to data in github repo
+path = 'https://raw.githubusercontent.com/ksauln/FPL-Analysis/app/data/'
+
 
 # paths to each season's data
-season_paths = [path/'2016-17', path/'2017-18', path/'2018-19',path/'2019-20']
+season_paths = [path + '2016-17', path + '2017-18', path + '2018-19',path + '2019-20']
 
 # names for each season
 season_names = ['1617', '1718', '1819', '1920']
 
 # team codes
-teams = pd.read_csv(path/'teams.csv')
+teams = pd.read_csv(path + 'teams.csv')
 
 all_players = build_players(path, season_paths, season_names, teams)
 
@@ -64,12 +64,12 @@ df_train = pd.concat([df_1617, df_1718, df_1819], ignore_index=True, axis=0)
 df_train.shape
 
 # save latest training set to csv
-df_train.to_csv(path/'initial_train.csv')
+#df_train.to_csv(path/'initial_train.csv')
 
 ## now need to create the prediction set
 # start by running fixtures from build_out
 
-fixtures = remaining_fixtures(path/'2019-20/fixtures.csv', current_gw, current_season, teams)
+fixtures = remaining_fixtures(path+ '2019-20/fixtures.csv', current_gw, current_season, teams)
 
 #now get the remaining season left for the players
 remaining_season = remaining_season_func(all_players, current_season, fixtures, path)
