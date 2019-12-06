@@ -19,12 +19,15 @@ import pandas as pd
 import dash_auth
 
 
-#auth for dashboard
-#auth = dash_auth.BasicAuth(app)
+#creating username and password set to log into app
+# UNCOMMENT WHEN PUSHING TO HEROKU
+#USERNAME_PASSWORD_PAIRS =[['user','view2019']]
+
+
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app = dash.Dash(__name__, 
+app = dash.Dash(__name__,
                 external_stylesheets=external_stylesheets,
                 meta_tags=[
                             {
@@ -34,7 +37,10 @@ app = dash.Dash(__name__,
                         ]
                 )
 
-server=app.server
+
+# UNCOMMENT WHEN PUSHING TO HEROKU
+#auth = dash_auth.BasicAuth(app,USERNAME_PASSWORD_PAIRS)
+#server=app.server
 
 # Selectable options for graphs
 available_players = totals_curr['player'].unique()
@@ -88,7 +94,7 @@ def build_player_selection():
                                 ),
                             ],
                         ),
-                    ],  
+                    ],
                 )
 
 def build_bar_graphs():
@@ -233,7 +239,7 @@ app.layout = html.Div(
                  ),
         ],
     )
-      
+
 
 ###############################################################
 # Call back for TOTALS Bar Graph

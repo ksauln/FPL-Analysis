@@ -5,10 +5,6 @@ Created on Fri Nov 15 10:56:51 2019
 
 @author: Sauln
 
-
-
-
-
 Uses data from:
     https://github.com/vaastav/Fantasy-Premier-League/tree/master/data
 
@@ -16,9 +12,14 @@ and elements of building out the season from:
     https://github.com/solpaul/fpl-prediction
 
 Make sure to get the most recent data after games are played from vaastav's repository
+
+
+NOTE: This app is combines the build_out.py, FPL_Analysis.py, and FPL_Dashboard.py
+       files that I use for development and to run locally.
+       Need to remember to uncomment the server when pushing to heroku
 """
 # Enter Current Game Week and Seaon.
-#Will need to update the program every year to point to the correct season.
+# Will need to update the program every year to point to the correct season.
 # Need to update every "week" to make sure everything is up to date
 
 current_gw = 15
@@ -35,7 +36,6 @@ current_season =1920
 import pandas as pd
 import numpy as np
 import requests
-#import lxml.html as lh
 
 
 
@@ -236,10 +236,11 @@ def remaining_season_func(all_players, current_season, fixtures, path):
     # cast position to integer
     remaining_season_df['position'] = remaining_season_df['position'].astype(int)
 
-    # save latest prediction set to csv
+    # save latest prediction set to csv for local use
     #remaining_season_df.to_csv(path + 'remaining_season.csv')
 
     return remaining_season_df
+
 
 #function to create the next 5 fixtures and their difficulty
 
@@ -326,6 +327,7 @@ df_train = pd.concat([df_1617, df_1718, df_1819], ignore_index=True, axis=0)
 df_train.shape
 
 # save latest training set to csv
+# for local use
 #df_train.to_csv(path/'initial_train.csv')
 
 ## now need to create the prediction set

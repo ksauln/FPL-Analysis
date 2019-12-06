@@ -2,7 +2,6 @@
 import pandas as pd
 import numpy as np
 import requests
-import lxml.html as lh
 
 
 def build_players(path, season_paths, season_names, teams):
@@ -10,7 +9,7 @@ def build_players(path, season_paths, season_names, teams):
     season_players = []
 
     for season_path in season_paths:
-        players = pd.read_csv(season_path/'players_raw.csv',
+        players = pd.read_csv(season_path + '/players_raw.csv',
                                usecols=['first_name', 'second_name', 'id',
                                         'team_code', 'element_type', 'now_cost',
                                         'chance_of_playing_next_round'])
@@ -55,8 +54,8 @@ def build_season(path, season, all_players, teams, gw):
 
     # read in each gameweek and append to season list
     for i in gw:
-        gw = 'gws/gw' + str(i) + '.csv'
-        gw_df = pd.read_csv(path/gw, encoding='latin')
+        gw = '/gws/gw' + str(i) + '.csv'
+        gw_df = pd.read_csv(path + gw, encoding='latin')
         gw_df['gw'] = i
         df_season.append(gw_df)
 
@@ -203,15 +202,16 @@ def remaining_season_func(all_players, current_season, fixtures, path):
     remaining_season_df['position'] = remaining_season_df['position'].astype(int)
 
     # save latest prediction set to csv
-    remaining_season_df.to_csv(path/'remaining_season.csv')
+    # For local use
+    remaining_season_df.to_csv(path + 'remaining_season.csv')
 
     return remaining_season_df
 
 #function to create the next 5 fixtures and their difficulty
-    
+
 def next_n_fixtures(fixtures, next_n_games, current_gw):
     # create schedule df
-    
+
     #get all home fixtures
     schedule1 = fixtures.copy()
     schedule1['was_home'] =True
@@ -223,7 +223,7 @@ def next_n_fixtures(fixtures, next_n_games, current_gw):
                               'away_team_code': 'opponent_team_code',
                               'away_team_diff':'opponent_team_diff'},
                               inplace=True)
-    
+
     #get awal fixtures
     schedule2 = fixtures.copy()
     schedule2['was_home'] =False
@@ -235,16 +235,16 @@ def next_n_fixtures(fixtures, next_n_games, current_gw):
                               'home_team_code': 'opponent_team_code',
                               'home_team_diff':'opponent_team_diff'},
                               inplace=True)
-    
+
     #combine home and away
     schedule_df = schedule1.append(schedule2).sort_values(by=['team_code','gw']).reset_index(drop=True)
     #rearrage columns
     schedule_df = schedule_df[['gw','team', 'team_code','team_diff',
                            'opponent_team','opponent_team_code','opponent_team_diff',
                            'was_home']]
-    
+
     dic = {}
-    
+
     for team_code in schedule_df['team_code'].unique():
         #schedule_sort=schedule_df.sort_values(by=[team_code,'gw'])
         team_looking_at = schedule_df.loc[schedule_df['team_code'] ==team_code]
