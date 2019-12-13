@@ -25,10 +25,8 @@ import dash_bootstrap_components as dbc
 
 
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-
 app = dash.Dash(__name__,
-                external_stylesheets=external_stylesheets,
+                external_stylesheets=[dbc.themes.GRID],
                 meta_tags=[
                             {
                                 "name": "fplanalysis",
@@ -143,7 +141,6 @@ def build_bar_graphs():
                     ],
                 )
 
-
 def build_trend_graphs():
     return html.Div(
             id="middle",
@@ -202,23 +199,27 @@ def build_upcoming_fixtures():
 
 
 
+
 app.layout = html.Div(
         dbc.Container([
-            dbc.Row(
-                    html.H6("FPL Analytics")
-                    ),
+            dbc.Row(html.H1("FPL Analytics"),
+                        style={"font-size":16}),
             dbc.Row(
                 [
-                    dbc.Col(build_player_selection(), align="start"),
-                    dbc.Col(build_bar_graphs())
+                    dbc.Col(build_player_selection(), width=4,align="start"),
+                    dbc.Col(build_bar_graphs(),width=6)
                 ]
                     ),
-            dbc.Row(build_trend_graphs()),
-            dbc.Row(build_upcoming_fixtures())
+            dbc.Row(
+                    dbc.Col(build_trend_graphs())
+                    ),
+            dbc.Row(
+                    dbc.Col(build_upcoming_fixtures())
+                    )
             
                 ]
-        )
             )
+        )
 
 
 ###############################################################
@@ -271,6 +272,7 @@ def update_player_avg_graph(player1,player2, metric2):
                 barmode="group"
         )
     }
+
 ###############################################################
 # Call back for Trend Graph
 @app.callback(

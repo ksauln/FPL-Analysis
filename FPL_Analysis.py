@@ -21,7 +21,7 @@ Make sure to get most recent data from here:
 
 
 '''
-current_gw = 16
+current_gw = 17
 current_season =1920
 
 #set working directory
