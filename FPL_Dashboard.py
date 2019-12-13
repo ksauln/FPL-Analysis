@@ -4,6 +4,8 @@
 Created on Fri Nov 15 10:56:51 2019
 
 @author: Sauln
+
+use dash-bootstrap-components for grid layout
 """
 
 # runs required steps to get data
@@ -17,18 +19,15 @@ from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 import pandas as pd
 import dash_auth
-
+import dash_bootstrap_components as dbc
 
 #creating username and password set to log into app
 # UNCOMMENT WHEN PUSHING TO HEROKU
 #USERNAME_PASSWORD_PAIRS =[['user','view2019']]
 
 
-
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-
 app = dash.Dash(__name__,
-                external_stylesheets=external_stylesheets,
+                external_stylesheets=[dbc.themes.GRID],
                 meta_tags=[
                             {
                                 "name": "fplanalysis",
@@ -97,15 +96,10 @@ def build_player_selection():
                     ],
                 )
 
-def build_bar_graphs():
+def build_bar_graph1():
     return html.Div(
-            id="upper-right",
-            className="bar graphs",
+            className="bar graph1",
             children=[
-                    html.P(
-                            className="section-title",
-                            children="Graph Comparsion",
-                            ),
                 html.Div(
                 className="totals",
                 children=[
@@ -123,7 +117,14 @@ def build_bar_graphs():
                                 ),
                            ],
                           ),
-                 html.Div(
+                    ],
+                )
+
+def build_bar_graph2():
+    return html.Div(
+            className="bar graph2",
+            children=[
+                html.Div(
                 className="averages",
                 children=[
                     html.Div(
@@ -149,10 +150,6 @@ def build_trend_graphs():
             id="middle",
             className="trend graphs",
             children=[
-                    html.P(
-                            className="section-title",
-                            children="Trending",
-                            ),
                 html.Div(
                 className="trend",
                 children=[
@@ -178,67 +175,56 @@ def build_upcoming_fixtures():
             id="bottom",
             className="upcoming",
             children=[
-                    html.P(
-                            className="section-title",
-                            children="Upcoming Fixtures",
-                            ),
                 html.Div(
                 className="upcoming_fixtures",
                 children=[
-                        html.Div([
-                                    dcc.Graph(id="next_fixtures_p1")
-                                ],
-                                className="row",
-                                    style={'width': '50%', 'display': 'inline-block'}),
-                        html.Div([
-                                    dcc.Graph(id="next_fixtures_p2")
-                                ],
-                                className="row",
-                                    style={'width': '50%', 'display': 'inline-block'})
-                                ],
-                            ),
-                    ],
+                        html.Div(
+                                dbc.Container([
+                                        dbc.Row(
+                                            [
+                                                dbc.Col(dcc.Graph(id="next_fixtures_p1")),
+                                                dbc.Col(dcc.Graph(id="next_fixtures_p2"))
+                                            ]
+                                                )
+                                            ])
+                                ),
+                        ],
+                        )
+                    ]
                 )
 
 
 
 app.layout = html.Div(
-    className="container scalable",
-    children=[
-        html.Div(
-            id="banner",
-            className="banner",
-            children=[
-                html.H6("FPL Analytics"),
-            ],
-        ),
-        html.Div(
-            id="left-container",
-            className="row",
-            children=[
-                build_player_selection()
-                    ],style={'width':'40%','display':'inline-block'}
-                ),
-        html.Div(
-                id="right-container",
-                children=[
-                        build_bar_graphs()
-                        ],style={'width':'60%','display':'inline-block'}
+        dbc.Container([
+            dbc.Row(html.H1("FPL Analytics"),
+                        style={"font-size":18}),
+            dbc.Row(
+                [
+                    dbc.Col(build_player_selection(), width=4,align="start")
+                ]
                     ),
-         html.Div(
-                id="middle-container",
-                children=[
-                        build_trend_graphs()
-                        ],
+            dbc.Row(html.H2("Bar Graph Comparsion"),
+                        style={"font-size":12}),
+            dbc.Row(
+                [
+                        dbc.Col(build_bar_graph1(),width=6),
+                        dbc.Col(build_bar_graph2(),width=6)
+                ]),
+            dbc.Row(html.H2("Trending Graph"),
+                        style={"font-size":12}),
+            dbc.Row(
+                    dbc.Col(build_trend_graphs())
                     ),
-         html.Div(
-                 id="bottom-container",
-                 children =[
-                         build_upcoming_fixtures()
-                         ],
-                 ),
-        ],
-    )
+            dbc.Row(html.H2("Upcoming Fixtures"),
+                    style={"font-size":12}),
+            dbc.Row(
+                    dbc.Col(build_upcoming_fixtures())
+                    )
+            
+                ])
+        )
+
 
 
 ###############################################################
@@ -325,7 +311,7 @@ def update_trend_graph(player1,player2, trend_metric):
     Output("next_fixtures_p1", "figure"),
      [Input('player1', 'value')])
 
-def update_graph(player1):
+def update_next5_p1(player1):
     value_header = ['Game Week','Opponent','Difficulty','Home or Away']
 
     #create dataframe with the stats we want to look at
@@ -364,7 +350,7 @@ def update_graph(player1):
     Output("next_fixtures_p2", "figure"),
      [Input('player2', 'value')])
 
-def update_graph(player2):
+def update_next5_p2(player2):
     value_header = ['Game Week','Opponent','Difficulty','Home or Away']
 
     #create dataframe with the stats we want to look at
