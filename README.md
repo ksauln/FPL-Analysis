@@ -31,4 +31,3 @@ Required packages:
 - os
 - numpy
 - requests
-- lxml.html
