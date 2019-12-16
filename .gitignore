@@ -5,3 +5,6 @@ FPL_Dashboard_test.py
 
 # Ignore old things
 /OLD/*
+
+# Ignore work
+/work/*
